@@ -1,0 +1,5 @@
+mutation updateRoute { updateRoute ( id: "101", disabled: true ) {
+	    id
+    	flightNumber
+	} 
+}
