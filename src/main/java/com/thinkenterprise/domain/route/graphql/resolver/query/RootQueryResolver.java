@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.thinkenterprise.actuator.FlightServiceCounter;
 import com.thinkenterprise.domain.route.RouteException;
 import com.thinkenterprise.domain.route.graphql.error.RouteGraphQLError;
 import com.thinkenterprise.domain.route.jpa.model.Route;
@@ -35,6 +36,8 @@ public class RootQueryResolver implements GraphQLQueryResolver {
 	@Value("${route.exception}")
 	private Boolean exception; 
 	
+	@Autowired
+	FlightServiceCounter fsCounter;
 	
 	public RootQueryResolver() {
 		super();
@@ -51,10 +54,13 @@ public class RootQueryResolver implements GraphQLQueryResolver {
 	//                                        System.out.println(dataFetchingEnvironment.getContext().toString());
 	public List<Route> routes() {
 		
-		if(!exception)
+		fsCounter.incrementRouteRequestCountCounter();
+		
+		if(!exception) 
 			return routeRepository.findAll();
 		else 
 			throw new RouteException("Test Exception ....");
+		
 	
 	} 
 
